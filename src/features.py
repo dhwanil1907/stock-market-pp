@@ -24,3 +24,39 @@ def _macd_hist(close: pd.Series, fast=12, slow=26, signal=9) -> pd.series:
     signal_line = macd_line.ewm(span=signal, adjust=False).mean()
     return (macd_line - signal_line).fillna(0.0)
 
+# ----------------- main ----------------- #
+def make_features(df: pd.DataFrame) -> pd.DataFrame:
+    """ 
+    Features: 
+    - Return_1d, Return_1d_lag1 , Return_5d, Return_21d
+    - MA_20, Price_vs_MA_20
+    - Vol_20, Vol_60, Vol_Ratio_20_60
+    - RSI_14, MACD_Hist
+    - BB_PctB_20_2, BB_Width_20_2
+    - Target_Return_1d (shifted -1)
+    """
+
+    # robust index/column 
+    df = df.copy().sort_index().reset_index 
+    df = df[~df.index.duplicated(keep="first")]
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = [c[0] if isinstance(c, tuple) else c for c in df.columns]
+
+    # base price series
+    close = _ensure_close(df)
+
+    # returns short + multi-horizon 
+    ret1 = close.pct_change(1)
+    ret5 = close.pct_change(5)
+    ret21 = close.pct_change(21)
+
+    feat = pd.DataFrame(index=df.index)
+    feat["Close"] = close
+    feat["Return_1d"] = ret1
+    feat["Return_1d_lag1"] = ret1.shift(1)
+    feat["Return_5d"] = ret5
+    feat["Return_21d"] = ret21
+
+    # moving average
+
+    
