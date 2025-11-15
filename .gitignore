@@ -1,0 +1,18 @@
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# notebooks
+.ipynb_checkpoints/
+
+# data & results
+data/*.csv
+results/*.png
+results/*.pdf
+results/*.json
+
+# OS
+.DS_Store
+Thumbs.db
