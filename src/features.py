@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+# ----------------- helpers ----------------- #
 def _ensure_close(df: pd.DataFrame) -> pd.DataFrame:
     """Use adjusted close if available, else close price."""
     if "Adj Close" in df.columns:
